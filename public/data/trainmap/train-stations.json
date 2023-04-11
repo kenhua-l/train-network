@@ -97,7 +97,6 @@
   "stations": [
     {"id": "dt2", "cx": 479, "cy": 265, "isInterchange": false},
     {"id": "dt3", "cx": 479, "cy": 297, "isInterchange": false},
-    {"id": "dt4", "cx": 479, "cy": 329, "isInterchange": false},
     {"id": "dt5", "cx": 479, "cy": 361, "isInterchange": false},
     {"id": "dt6", "cx": 485, "cy": 406, "isInterchange": false},
     {"id": "dt7", "cx": 502, "cy": 425, "isInterchange": false},
@@ -131,14 +130,12 @@
     {"id": "te6", "cx": 658, "cy": 247, "isInterchange": false},
     {"id": "te7", "cx": 658, "cy": 309, "isInterchange": false},
     {"id": "te8", "cx": 658, "cy": 357, "isInterchange": false},
-    {"id": "te10", "cx": 658, "cy": 444, "isInterchange": false},
     {"id": "te12", "cx": 658, "cy": 517, "isInterchange": false},
     {"id": "te13", "cx": 658, "cy": 549, "isInterchange": false},
     {"id": "te15", "cx": 658, "cy": 648, "isInterchange": false},
     {"id": "te16", "cx": 658, "cy": 694, "isInterchange": false},
     {"id": "te18", "cx": 690, "cy": 825, "isInterchange": false},
     {"id": "te19", "cx": 745, "cy": 881, "isInterchange": false},
-    {"id": "te21", "cx": 836, "cy": 953, "isInterchange": false},
     {"id": "te22", "cx": 880, "cy": 953, "isInterchange": false}
   ]
 }, {

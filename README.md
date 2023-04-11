@@ -1,3 +1,9 @@
+
+SPECIAL SHOUT OUTS TO 
+https://upload.wikimedia.org/wikipedia/commons/6/68/Singapore_MRT_and_LRT_System_Map.svg (wikipedia)
+
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

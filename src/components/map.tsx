@@ -1,5 +1,4 @@
 import { FormEvent, useState } from 'react';
-import TrainMap from '../assets/train-system';
 
 export default function Map() {
   const [postcode, setPostcode] = useState('');
@@ -25,9 +24,7 @@ export default function Map() {
           </label>
         </form>
         <p>{address}</p>
-        <div className="img-cover">
-          <TrainMap />
-        </div>
+        
       </div>
     </>
   )

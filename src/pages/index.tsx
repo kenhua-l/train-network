@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.scss'
-import Map from '../components/map';
+import MapContainer from '../containers/mapContainer';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +16,8 @@ export default function Home() {
       </Head>
       <div className="container">
         <main className={styles.main}>
-          <Map />
+          <h1>Train Map</h1>
+          <MapContainer />
         </main>
       </div>
     </>

@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { fetchData } from "@/api/utilities";
 
-declare interface TrainStationProps {
+type TrainStationProps = {
   id: string;
   color: string;
   type: string;
   stations: TrainStation[];
 }
 
-declare interface TrainStation {
+type TrainStation = {
   id: string;
   name: string;
   cx: number;
@@ -17,6 +17,11 @@ declare interface TrainStation {
   y: number;
   isInterchange: boolean;
   handleClick: Function;
+}
+
+declare interface TrainMapProps {
+  handleClick: Function;
+  trainStations: TrainStationProps[];
 }
 
 function TrainStation(props: TrainStation) {
@@ -71,7 +76,7 @@ function TrainStation(props: TrainStation) {
   )
 }
 
-export default function TrainMap(props: any) {
+export default function TrainMap(props: TrainMapProps) {
   const [stations, setStations] = useState([]);
   const trainStationsDataFile = '../data/trainmap/train-stations.json';
   

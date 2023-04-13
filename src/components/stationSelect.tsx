@@ -15,13 +15,13 @@ export default function StationSelect(props: StationSelectProps) {
   const instructions = [
     "Where are you now?",
     "Where are you going?",
-    "Find the best route!",
+    "Find the best route ",
   ]
 
   useEffect(() => {
     if(props.source == '') setInstruction(instructions[0]);
     else if(props.destination == '') setInstruction(instructions[1]);
-    else setInstruction(instructions[2] + ' from ' + props.source + ' to ' + props.destination);
+    else setInstruction(instructions[2] + ' from ' + props.source + ' to ' + props.destination + '!');
   }, [props])
   
   useEffect(() => {
@@ -42,11 +42,16 @@ export default function StationSelect(props: StationSelectProps) {
     <>
       <h2>{greeting}</h2>
       <p>{instruction}</p>
-      <p>From <input type="text" value={props.source} readOnly></input> to  <input type="text" value={props.destination} readOnly></input></p>
+      <div className="from-to-div">
+        <span>I&apos;m going from </span>
+        <input type="text" value={props.source} readOnly></input>
+        <span> to </span>
+        <input type="text" value={props.destination} readOnly></input>
+      </div>
       {props.routes && props.routes != '' && <p>{props.routes} routes found and total cost is {props.cost}</p>}
       <div>
-        <button type="button">See all routes</button>
-        <button type="reset" onClick={() => {props.reset()}}>reset</button>
+        <button className="btn btn-primary me-3" type="button">See all routes</button>
+        <button className="btn btn-primary" type="reset" onClick={() => {props.reset()}}>reset</button>
       </div>
     </>
   )

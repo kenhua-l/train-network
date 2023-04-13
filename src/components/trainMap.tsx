@@ -59,7 +59,7 @@ function TrainStation(props: TrainStation) {
         setRadius(props.isInterchange ? 6 : 4)
       }}
       onClick={(e) => {
-        props.handleClick(props.id);
+        if(props.handleClick) props.handleClick(props.id);
       }}
     >
       <circle fill="#fff" cx={props.cx} cy={props.cy} r={radius} />
@@ -76,7 +76,7 @@ function TrainStation(props: TrainStation) {
   )
 }
 
-export default function TrainMap(props: TrainMapProps) {
+export default function TrainMap(props: any) {
   const [stations, setStations] = useState([]);
   const trainStationsDataFile = '../data/trainmap/train-stations.json';
   

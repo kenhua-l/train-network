@@ -1,22 +1,24 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import styles from '@/styles/Home.module.scss'
-import MapContainer from '../containers/mapContainer';
+import TrainMap from '@/components/trainMap';
+import GraphForm from '@/containers/graphForm';
 
-export default function Home() {
+export default function GraphBuilder() {
   return (
     <>
       <Head>
-        <title>Public Transport Calculator</title>
-        <meta name="description" content="Find the best route in the train network" />
+        <title>Graph Builder</title>
+        <meta name="description" content="Build the graph network" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="container">
-        <p><Link href="/graph-builder">Graph Builder</Link></p>
+        <p><Link href="/">Home</Link></p>
         <main className={styles.main}>
-          <h1>Train Map</h1>
-          <MapContainer />
+          <h1>Graph Builder</h1>
+          <GraphForm />
+          <TrainMap />
         </main>
       </div>
     </>

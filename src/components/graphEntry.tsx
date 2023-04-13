@@ -24,6 +24,7 @@ export default function GraphEntry({ enterData }: {[key:string]:Function}) {
   const [stationNamesList, setStationNames] = useState<{[key:string]:string}[]>([]);
   const [lines, setLines] = useState<string>('');
   const [neighbors, setNeighbors] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
   async function getNames() {
     var data = await fetchData(stationNamesDataFile);
@@ -40,9 +41,13 @@ export default function GraphEntry({ enterData }: {[key:string]:Function}) {
 
   function handleSubmit(event: FormEvent<StationDataForm>) {
     event.preventDefault();
+    // check
     let form = event.currentTarget.elements;
+    let id = form.stationId.value;
+    let split = neighbors.split(', ');
+    if(split.includes(id)) setError('station cannot be its own neightbor');
     let data = {
-      'stationId': form.stationId.value,
+      'stationId': id,
       'lines': lines,
       'neighbors': neighbors
     }
@@ -103,6 +108,7 @@ export default function GraphEntry({ enterData }: {[key:string]:Function}) {
             </div>
           </div>
         </div>
+        <p className="text-danger">{error}</p>
         <div className="col-md-3 align-self-end">
           <button type="submit" className="btn btn-primary">Enter Station</button>       
         </div>

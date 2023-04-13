@@ -46,7 +46,7 @@ export default function GraphBuilder() {
   }
 
   async function loadGraph() {
-    var loadStations = await fetchData('../data/network/new.json');
+    var loadStations = await fetchData('../data/network/train-network.json');
     setStations(loadStations)
   }
   function load() {

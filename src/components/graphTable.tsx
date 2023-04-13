@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 type StationData = {
   stationId: string;
   lines: string;
@@ -11,9 +13,22 @@ type GraphTable = {
 }
 
 export default function GraphTable({ stations, remove, reorder, load }: GraphTable) {
+  const [wrong, setWrong] = useState(false);
   function save(data: any) {
     navigator.clipboard.writeText(JSON.stringify(data));
   }
+  
+  useEffect(() => {
+    let flag = false;
+    stations.forEach((station, i) => {
+      let split = station.neighbors.split(', ');
+      if(split.includes(station.stationId)) {
+        flag = true;
+      }
+    });
+    setWrong(flag);
+  },[stations])
+  
 
   return (
     <>
@@ -44,6 +59,7 @@ export default function GraphTable({ stations, remove, reorder, load }: GraphTab
       </table>
       <button className="btn btn-primary me-2" type="button" onClick={() => save(stations)}>Copy</button>
       <button className="btn btn-secondary" type="button" onClick={() => load()}>Load</button>
+      <p className="text-danger">{wrong ? 'something is wrong': ''}</p>
     </>
   )
 }

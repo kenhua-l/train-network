@@ -18,7 +18,9 @@ export default function GraphBuilder() {
         <main className={styles.main}>
           <h1>Graph Builder</h1>
           <GraphForm />
-          <TrainMap />
+          <div className="half-page">
+            <TrainMap />
+          </div>
         </main>
       </div>
     </>

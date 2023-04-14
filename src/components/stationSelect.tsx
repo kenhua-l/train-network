@@ -6,6 +6,7 @@ declare interface StationSelectProps {
   routes: string;
   cost: string;
   reset: Function;
+  traverse: Function;
 }
 
 export default function StationSelect(props: StationSelectProps) {
@@ -50,7 +51,7 @@ export default function StationSelect(props: StationSelectProps) {
       </div>
       {props.routes && props.routes != '' && <p>{props.routes} routes found and total cost is {props.cost}</p>}
       <div>
-        <button className="btn btn-primary me-3" type="button">See all routes</button>
+        <button className="btn btn-primary me-3" type="button" onClick={() => {props.traverse()}}>See all routes</button>
         <button className="btn btn-primary" type="reset" onClick={() => {props.reset()}}>reset</button>
       </div>
     </>

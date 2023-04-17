@@ -30,9 +30,9 @@ export default function StationSelect(props: StationSelectProps) {
     var time: number = now.getHours();
     if(time >= 5 && time < 12) {
       setGreeting('Good Morning! Where would you like to go?');
-    } else if(time >= 12 && time < 5) {
+    } else if(time >= 12 && time < 17) {
       setGreeting('Good Afternoon! Where are you heading to?');
-    } else if(time >= 5 && time < 11) {
+    } else if(time >= 17 && time < 23) {
       setGreeting('Good Evening! Almost done for the day! Where are you going?');
     } else {
       setGreeting('The last train has probably left. Good night!')

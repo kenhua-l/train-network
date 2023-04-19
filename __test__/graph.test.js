@@ -862,7 +862,8 @@ var network = [
 function initializeGraph() {
   network.forEach((station, i) => {
     let neighbors = station.neighbors.split(', ');
-    trainNetwork.add(station.stationId, neighbors);
+    let lines = station.lines.split(', ');
+    trainNetwork.add(station.stationId, neighbors, lines);
   });
 }
 

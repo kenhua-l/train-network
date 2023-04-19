@@ -11,8 +11,8 @@ type StationData = {
 }
 
 export default function MapContainer() {
-  const [source, setSource] = useState<string[]>(['','']);
-  const [destination, setDestination] = useState<string[]>(['','']);
+  const [source, setSource] = useState<string[]>(['cc15','Bishan']);
+  const [destination, setDestination] = useState<string[]>(['ew16','Outram Park']);
   const [stationNames, setStationNames] = useState<{[key: string]: string}>({});
   const stationNamesDataFile = '../data/trainmap/train-codename.json';
   const stationGraphDataFile = '../data/network/train-network.json';
@@ -39,18 +39,16 @@ export default function MapContainer() {
 
     network.forEach((station:StationData, i:number) => {
       let neighbors = station.neighbors.split(', ');
-      graphCopy.add(station.stationId, neighbors);
+      let lines = station.lines.split(', ');
+      graphCopy.add(station.stationId, neighbors, lines);
     })
     setTrainGraph(graphCopy);
   }
 
   function traverse() {
-    let result = trainGraph.bfs(source[0], destination[0]);
-    // let result = trainGraph.dfs(source[0], destination[0]);
-    result = result?.map((t) => {
-      return t ? stationNames[t] : '';
-    });
-    console.log(result);
+    // let result = trainGraph.bfs(source[0], destination[0]);
+    let result = trainGraph.dfs(source[0], destination[0]);
+    console.log('res', result);
     return result;
   }
 

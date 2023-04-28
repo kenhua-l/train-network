@@ -875,44 +875,143 @@ beforeAll(() => {
 
 // TESTS
 var tests = [
-  { src: "cc15", dest: "ew16", id: "Bishan to Outram Park", type: "Interchange change line" },
-  { src: "cc15", dest: "ns16", id: "Bishan to Ang Mo Kio", type: "Interchange to normal one stop" },
-  { src: "cc15", dest: "pw3", id: "Bishan to Punggol Point", type: "Interchange to LRT" },
-  { src: "cc15", dest: "cg2", id: "Bishan to Changi Airport", type: "Interchange to edge" },
-  { src: "cc15", dest: "ew14", id: "Bishan to Raffles Place", type: "Interchange to busy station" },
-  { src: "cc15", dest: "bp2", id: "Bishan to South View", type: "Interchange to sandwiched LRT" },
-  { src: "ns16", dest: "ew11", id: "Ang Mo Kio to Lavender", type: "Normal change line" },
-  { src: "ns16", dest: "dt28", id: "Ang Mo Kio to Kaki Bukit", type: "Normal change line" },
-  { src: "ns2", dest: "ns3", id: "Bukit Batok to Bukit Gombak", type: "One stop sandwiched line" },
-  { src: "ew28", dest: "ew27", id: "Pioneer to Boon Lay", type: "One stop edge line" },
-  { src: "ns9", dest: "te1", id: "Woodlands to Woodlands North", type: "One stop edge to interchange" },
-  { src: "ew14", dest: "ew13", id: "Raffles City to City Hall", type: "One stop busy to busy" },
-  { src: "bp10", dest: "bp9", id: "Fajar to Bangkit", type: "One stop LRT to LRT" },
-  { src: "pw4", dest: "bp11", id: "Samudera to Segar", type: "LRT to LRT go through city" },
-  { src: "pw4", dest: "pe4", id: "Samudera to Riviera", type: "LRT to LRT different loop" },
-  { src: "pw4", dest: "se3", id: "Samudera to Bakau", type: "LRT to LRT different system" },
-  { src: "cc1", dest: "ew16", id: "Dhoby Ghaut to Outram Park", type: "Interchange to interchage in same line" },
-  { src: "te18", dest: "te19", id: "Maxwell to Shenton Way", type: "Same line TEL" },
-  { src: "ne13", dest: "ne11", id: "Kovan to Woodleigh", type: "Same line NEL" },
-  { src: "cc29", dest: "cc1", id: "Harbourfront to Dhoby Ghaut", type: "Same line edge to interchange" },
-  { src: "ew4", dest: "cg1", id: "Tanah Merah to Expo", type: "Same line EWL with forked direction from interchange" },
-  { src: "ew5", dest: "cg1", id: "Bedok to Expo", type: "Same line EWL with forked direction" },
-  { src: "ns11", dest: "ns15", id: "Sembawang to Yio Chu Kang", type: "Same line NSL" },
-  { src: "ce1", dest: "cc4", id: "Bayfront Promenade", type: "Same line double busy stations" },
-  { src: "cc29", dest: "cc29", id: "Harbourfront to Harbourfront", type: "Interchange station to itself" },
-  { src: "ew33", dest: "ew33", id: "Tuas Link to Tuas Link", type: "Edge station to itself" },
-  { src: "ew23", dest: "ew23", id: "Clementi to Clementi", type: "Normal station to itself" },
-  { src: "ns4", dest: "dt1", id: "Choa Chu Kang to Bukit Panjang", type: "Red to Blue via LRT but on LRT line" },
-  { src: "ns5", dest: "dt2", id: "Yew Tee to Cashew", type: "Red to Blue via LRT not on LRT line" },
-  { src: "cc2", dest: "cc16", id: "Bras Basah to Marymount", type: "Same line but change line better" },
-  { src: "dt8", dest: "dt27", id: "Tan Kah Kee to Ubi", type: "Same line but change line better" }
+  { 
+    src: "cc15", dest: "ew16", id: "Bishan to Outram Park", type: "Interchange change line",
+    musthaveroute:['cc15', 'ns18', 'ns19', 'ns20', 'ns21', 'ns22', 'te15', 'te16', 'ew16']
+  },
+  { src: "cc15", dest: "ns16", id: "Bishan to Ang Mo Kio", type: "Interchange to normal one stop",
+    musthaveroute:['cc15', 'ns16']
+  },
+  { src: "cc15", dest: "pw3", id: "Bishan to Punggol Point", type: "Interchange to LRT",
+    musthaveroute:['cc15', 'cc14', 'cc13', 'ne13', 'ne14', 'ne15', 'ne16', 'ne17', 'pw1', 'pw3']
+  },
+  { src: "cc15", dest: "cg2", id: "Bishan to Changi Airport", type: "Interchange to edge",
+    musthaveroute:['cc15', 'cc14', 'cc13', 'cc12', 'cc11', 'cc10', 'cc9', 'ew7', 'ew6', 'ew5', 'ew4', 'cg1', 'cg2']
+  },
+  { src: "cc15", dest: "ew14", id: "Bishan to Raffles Place", type: "Interchange to busy station",
+    musthaveroute:['cc15', 'ns18', 'ns19', 'ns20', 'ns21', 'ns22', 'ns23', 'cc1', 'ew13', 'ew14']
+  },
+  { src: "cc15", dest: "bp2", id: "Bishan to South View", type: "Interchange to sandwiched LRT",
+    musthaveroute:['cc15', 'ns16', 'ns15', 'ns14', 'ns13', 'ns12', 'ns11', 'ns10', 'ns9', 'ns8', 'ns7', 'ns5', 'ns4', 'bp2']
+  },
+  { src: "ns16", dest: "ew11", id: "Ang Mo Kio to Lavender", type: "Normal change line",
+    musthaveroute:['ns16', 'cc15', 'ns18', 'ns19', 'ns20', 'ns21', 'ns22', 'ns23', 'cc1', 'ew13', 'ew12', 'ew11']
+  },
+  { src: "ns16", dest: "dt28", id: "Ang Mo Kio to Kaki Bukit", type: "Normal change line",
+    musthaveroute:['ns16', 'cc15', 'cc14', 'cc13', 'cc12', 'cc11', 'cc10', 'dt27', 'dt28']
+  },
+  { src: "ns2", dest: "ns3", id: "Bukit Batok to Bukit Gombak", type: "One stop sandwiched line",
+    musthaveroute:['ns2', 'ns3']
+  },
+  { src: "ew28", dest: "ew27", id: "Pioneer to Boon Lay", type: "One stop edge line",
+    musthaveroute:['ew28', 'ew27']
+  },
+  { src: "ns9", dest: "te1", id: "Woodlands to Woodlands North", type: "One stop edge to interchange",
+    musthaveroute:['ns9', 'te1']
+  },
+  { src: "ew14", dest: "ew13", id: "Raffles City to City Hall", type: "One stop busy to busy",
+    musthaveroute:['ew14', 'ew13']
+  },
+  { src: "bp10", dest: "bp9", id: "Fajar to Bangkit", type: "One stop LRT to LRT",
+    musthaveroute:['bp10', 'bp9']
+  },
+  { src: "pw4", dest: "bp11", id: "Samudera to Segar", type: "LRT to LRT go through city",
+    musthaveroute:['pw4', 'pw3', 'pw1', 'ne17', 'ne16', 'ne15', 'ne14', 'ne13', 'cc13', 'cc14', 'cc15', 'cc16', 'cc17', 'cc19', 'dt8', 'dt7', 'dt6', 'dt5', 'dt3', 'dt2', 'dt1', 'bp13', 'bp12', 'bp11']
+  },
+  { src: "pw4", dest: "pe4", id: "Samudera to Riviera", type: "LRT to LRT different loop",
+    musthaveroute:['pw4', 'pw3','pw1', 'ne17', 'pe7', 'pe6', 'pe5', 'pe4']
+  },
+  { src: "pw4", dest: "se3", id: "Samudera to Bakau", type: "LRT to LRT different system",
+    musthaveroute:['pw4', 'pw3', 'pw1', 'ne17', 'ne16', 'se1', 'se2', 'se3']
+  },
+  { src: "cc1", dest: "ew16", id: "Dhoby Ghaut to Outram Park", type: "Interchange to interchage in same line",
+    musthaveroute:['cc1', 'ne5', 'ne4', 'ew16']
+  },
+  { src: "te18", dest: "te19", id: "Maxwell to Shenton Way", type: "Same line TEL",
+    musthaveroute:['te18', 'te19']
+  },
+  { src: "ne13", dest: "ne11", id: "Kovan to Woodleigh", type: "Same line NEL",
+    musthaveroute:['ne13', 'cc13', 'ne11']
+  },
+  { src: "cc29", dest: "cc1", id: "Harbourfront to Dhoby Ghaut", type: "Same line edge to interchange",
+    musthaveroute:['cc29', 'ew16', 'ne4', 'ne5', 'cc1']
+  },
+  { src: "ew4", dest: "cg1", id: "Tanah Merah to Expo", type: "Same line EWL with forked direction from interchange",
+    musthaveroute:['ew4', 'cg1']
+  },
+  { src: "ew5", dest: "cg1", id: "Bedok to Expo", type: "Same line EWL with forked direction",
+    musthaveroute:['ew5', 'ew4', 'cg1']
+  },
+  { src: "ns11", dest: "ns15", id: "Sembawang to Yio Chu Kang", type: "Same line NSL",
+    musthaveroute:['ns11', 'ns12', 'ns13', 'ns14', 'ns15']
+  },
+  { src: "ce1", dest: "cc4", id: "Bayfront to Promenade", type: "Same line double busy stations",
+    musthaveroute:['ce1', 'cc4']
+  },
+  { src: "cc29", dest: "cc29", id: "Harbourfront to Harbourfront", type: "Interchange station to itself",
+    musthaveroute:['cc29']
+  },
+  { src: "ew33", dest: "ew33", id: "Tuas Link to Tuas Link", type: "Edge station to itself",
+    musthaveroute:['ew33']
+  },
+  { src: "ew23", dest: "ew23", id: "Clementi to Clementi", type: "Normal station to itself",
+    musthaveroute:['ew23']
+  },
+  { src: "ns4", dest: "dt1", id: "Choa Chu Kang to Bukit Panjang", type: "Red to Blue via LRT but on LRT line",
+    musthaveroute:['ns4', 'bp2', 'bp3', 'bp4', 'bp5', 'dt1']
+  },
+  { src: "ns5", dest: "dt2", id: "Yew Tee to Cashew", type: "Red to Blue via LRT not on LRT line",
+    musthaveroute:['ns5', 'ns4', 'bp2', 'bp3', 'bp4', 'bp5', 'dt1', 'dt2']
+  },
+  { src: "cc2", dest: "cc16", id: "Bras Basah to Marymount", type: "Same line but change line better",
+    musthaveroute:['cc2', 'cc1', 'ns23', 'ns22', 'te13', 'te12', 'dt10', 'cc17', 'cc16']
+  },
+  { src: "dt8", dest: "dt27", id: "Tan Kah Kee to Ubi", type: "Same line but change line better",
+    musthaveroute:['dt8', 'cc19', 'cc17', 'cc16', 'cc15', 'cc14', 'cc13', 'cc12', 'cc11', 'cc10', 'dt27']
+  }
 ]
+
+expect.extend({
+  hasArray(received, args) {
+    var pass = false;
+    for(let j=0; j<received.length; j++) {
+      var paths = received[j];
+      if(paths.length === args.length) {
+        var check = true;
+        for(let i=0; i<paths.length; i++) {
+          if(paths[i] != args[i]) {
+            check = false;
+            break;
+          }
+        }
+        if(check) {
+          pass = true;
+          break;
+        }
+      }
+    }
+    if(pass) {
+      return {
+        message: () => 'has the path',
+        pass: true,
+      };
+    } else {
+      console.log(received)
+      return {
+        message: () => 'does not have the path',
+        pass: false,
+      }
+    }
+  }
+});
 
 function testAll() {
   tests.forEach((data) => {
     test(data.id, () => {
       let ansTo = trainNetwork.dfs(data.src, data.dest);
       let ansFo = trainNetwork.dfs(data.dest, data.src);
+      expect(ansTo).hasArray(data.musthaveroute);
+      expect(ansFo).hasArray(data.musthaveroute.reverse());
       console.log(data.id, data.type, ansTo.length, ansFo.length);
     });
   })

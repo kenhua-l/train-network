@@ -2,6 +2,14 @@ type Station = {
   nodes: string[];
   lines: string[];
 }
+
+// though the lesser the more coverage, but we want to 
+// increase this value as much as possible to NOT cover
+// too much.
+// 7 is the max that covers my test cases
+// 2 is the min to have better than 1st test result.
+const LAPSED_STATIONS = 5; 
+
 class Graph {
   // structure & constructor
   numberOfNodes: number;
@@ -93,9 +101,9 @@ class Graph {
   // dfs is okay. so far returns all possible paths. 
   // but the result size is too big and non-sensical (looping lrt lines)
   // step 2: check line change
-  // 1. avoid using one line after that line has been travelled
-  // - result for to and fro are different (eg bishan to outram - 25 paths / 155 paths)
-  
+  // 1. avoid using same line until a number of stations has passed
+  // - result for to and fro are different (for 5) (eg bishan to outram - 7999 paths / 10295 paths)
+  // 2. avoid using two same lines (if you took red and circle, can only retake red OR circle)
   */
   dfs(src: string, dest: string) {
     // setup
@@ -132,16 +140,42 @@ class Graph {
         } else {
           if(commutedLine.length==1) {
             if(linesCopy.includes(commutedLine[0])) {
-              if(linesCopy[linesCopy.length-1] != commutedLine[0]) break;
+              if(this.hasSameLine(linesCopy)) {
+                break;
+              } else if(linesCopy[linesCopy.length-1] != commutedLine[0]) {
+                if(linesCopy.length - linesCopy.lastIndexOf(commutedLine[0]) + 1 > LAPSED_STATIONS) {
+                  linesCopy.push(commutedLine[0]);
+                } else {
+                  break;
+                }
+              } else {
+                linesCopy.push(commutedLine[0]);
+              }
             } else {
               linesCopy.push(commutedLine[0]);
             }
           } else {
             // two lines only
-            if(linesCopy.includes(commutedLine[0])) {
-              if(linesCopy[linesCopy.length-1] != commutedLine[0]) break;
-            } else if(linesCopy.includes(commutedLine[1])) {
-              if(linesCopy[linesCopy.length-1] != commutedLine[1]) break;
+            if(linesCopy.includes(commutedLine[0]) && linesCopy[linesCopy.length-1] == commutedLine[0]) {
+              linesCopy.push(commutedLine[0]);
+            } else if(linesCopy.includes(commutedLine[1]) && linesCopy[linesCopy.length-1] == commutedLine[1]) {
+              linesCopy.push(commutedLine[1]);
+            } else if(linesCopy.includes(commutedLine[0]) && linesCopy[linesCopy.length-1] != commutedLine[0]) {
+              if(linesCopy.length - linesCopy.lastIndexOf(commutedLine[0]) + 1 > LAPSED_STATIONS) {
+                linesCopy.push(commutedLine[0]);
+              } else if(linesCopy.includes(commutedLine[1]) && linesCopy.length - linesCopy.lastIndexOf(commutedLine[1]) + 1 > LAPSED_STATIONS) {
+                linesCopy.push(commutedLine[1]);
+              } else {
+                break;
+              }
+            } else if(linesCopy.includes(commutedLine[1]) && linesCopy[linesCopy.length-1] != commutedLine[1]) {
+              if(linesCopy.length - linesCopy.lastIndexOf(commutedLine[1]) + 1 > LAPSED_STATIONS) {
+                linesCopy.push(commutedLine[1]);
+              } else if(linesCopy.includes(commutedLine[0]) && linesCopy.length - linesCopy.lastIndexOf(commutedLine[0]) + 1 > LAPSED_STATIONS) {
+                linesCopy.push(commutedLine[0]);
+              } else {
+                break;
+              }
             } else {
               linesCopy.push(commutedLine[0]);
             }
@@ -170,6 +204,20 @@ class Graph {
     // mostly return one line but there are two instances as of now
     // that returns two lines
     return ans;
+  }
+
+  // check if the commute has already taken one same line before
+  hasSameLine(arr: string[]) {
+    let check: string[] = [];
+    for(let i=0; i<arr.length; i++) {
+      if(check.includes(arr[i])) {
+        if(check[check.length-1] == arr[i]) continue;
+        else return true;
+      } else {
+        check.push(arr[i]);
+      }
+    }
+    return false;
   }
 
 }

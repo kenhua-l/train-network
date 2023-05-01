@@ -968,6 +968,12 @@ var tests = [
   },
   { src: "dt8", dest: "dt27", id: "Tan Kah Kee to Ubi", type: "Same line but change line better",
     musthaveroute:['dt8', 'cc19', 'cc17', 'cc16', 'cc15', 'cc14', 'cc13', 'cc12', 'cc11', 'cc10', 'dt27']
+  },
+  { src: "cc3", dest: "cc20", id: "Esplanade to Farrer Road", type: "Same line but change line better",
+    musthaveroute:['cc3', 'cc4', 'ew12', 'dt13', 'ne7', 'ns21', 'dt10', 'cc19', 'cc20']
+  },
+  { src: "ce1", dest: "cc20", id: "Bayfront to Farrer Road", type: "Same line but change line better",
+    musthaveroute:['ce1', 'cc4', 'ew12', 'dt13', 'ne7', 'ns21', 'dt10', 'cc19', 'cc20']
   }
 ]
 
@@ -1006,6 +1012,98 @@ expect.extend({
 });
 
 function testAll() {
+  describe('How to Get There', () => {
+    test('Bishan to Ang Mo Kio', () => {
+      let test =  trainNetwork.howToGetThere('cc15', 'ns16');
+      expect(test).toHaveLength(1);
+      expect(test).toContain('nsl');
+    });
+    test('Lakeside to Chinese Garden', () => {
+      let test =  trainNetwork.howToGetThere('ew26', 'ew25');
+      expect(test).toHaveLength(1);
+      expect(test).toContain('ewl');
+    });
+    test('Stevens to Caldecott', () => {
+      let test =  trainNetwork.howToGetThere('dt10', 'cc17');
+      expect(test).toHaveLength(1);
+      expect(test).toContain('tel');
+    });
+    test('Outram Park to Chinatown', () => {
+      let test =  trainNetwork.howToGetThere('ew16', 'ne4');
+      expect(test).toHaveLength(1);
+      expect(test).toContain('nel');
+    });
+    test('Macpherson to Paya Lebar', () => {
+      let test =  trainNetwork.howToGetThere('cc10', 'cc9');
+      expect(test).toHaveLength(1);
+      expect(test).toContain('ccl');
+    });
+    test('Bishan to Ang Mo Kio', () => {
+      let test =  trainNetwork.howToGetThere('cc15', 'ns16');
+      expect(test).toHaveLength(1);
+      expect(test).toContain('nsl');
+    });
+    // edge case: skip station
+    test('Tanah Merah to Tampines', () => {
+      let test =  trainNetwork.howToGetThere('ew4', 'ew2');
+      expect(test).toHaveLength(1);
+      expect(test).toContain('ewl');
+    });
+    // edge case: more than one line
+    test('Promenade to Bayfront', () => {
+      let test =  trainNetwork.howToGetThere('cc4', 'ce1');
+      expect(test).toHaveLength(2);
+      expect(test).toContain('ccl');
+      expect(test).toContain('dtl');
+    });
+    // edge case: more than one line
+    test('City Hall to Raffles Place', () => {
+      let test =  trainNetwork.howToGetThere('ew13', 'ew14');
+      expect(test).toHaveLength(2);
+      expect(test).toContain('ewl');
+      expect(test).toContain('nsl');
+    });
+    // edge case: same station
+    test('Bugis to Bugis', () => {
+      let test =  trainNetwork.howToGetThere('ew12', 'ew12');
+      expect(test).toHaveLength(2);
+      expect(test).toContain('dtl');
+      expect(test).toContain('ewl');
+    });
+    // edge case: no overlap line
+    test('Bugis to Bishan', () => {
+      let test =  trainNetwork.howToGetThere('ew12', 'cc15');
+      expect(test).toHaveLength(0);
+    });
+  });
+
+  describe('Has Same Line', () => {
+    test('Same line once', () => {
+      expect(trainNetwork.hasSameLine(['ccl', 'ccl', 'ccl', 'ewl', 'ewl', 'ccl', 'ccl'])).toBeTruthy();
+    });
+    test('Same line in between', () => {
+      expect(trainNetwork.hasSameLine(['nsl', 'ccl', 'ccl', 'ewl', 'ewl', 'ccl', 'dtl'])).toBeTruthy();
+    });
+    test('No same line', () => {
+      expect(trainNetwork.hasSameLine(['nsl', 'ccl', 'ccl', 'ewl', 'ewl', 'dtl'])).toBeFalsy();
+    });
+    test('No same line at all', () => {
+      expect(trainNetwork.hasSameLine(['nsl', 'ccl', 'tel', 'ewl', 'nel', 'dtl'])).toBeFalsy();
+    });
+    test('Same line twice', () => {
+      expect(trainNetwork.hasSameLine(['nsl', 'ccl', 'nsl', 'ewl', 'ccl', 'dtl'])).toBeTruthy();
+    });
+    test('Only one line', () => {
+      expect(trainNetwork.hasSameLine(['ccl'])).toBeFalsy();
+    });
+    test('Only one line multiple', () => {
+      expect(trainNetwork.hasSameLine(['ccl', 'ccl', 'ccl', 'ccl'])).toBeFalsy();
+    });
+    test('Empty', () => {
+      expect(trainNetwork.hasSameLine([])).toBeFalsy();
+    });
+  });
+
   tests.forEach((data) => {
     test(data.id, () => {
       let ansTo = trainNetwork.dfs(data.src, data.dest);

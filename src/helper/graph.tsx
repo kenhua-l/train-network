@@ -9,6 +9,14 @@ type Station = {
 // 7 is the max that covers my test cases
 // 2 is the min to have better than 1st test result.
 const LAPSED_STATIONS = 5; 
+// allowance of number of stations from the shortest 
+// distance found via djikstra, the lesser the better
+// 3 is the minimum max to get a desired answer from two test cases
+const STATIONS_TOLERANCE = 3;
+// allowance of number of line changes from perceived least
+// line changes, the lesser the better
+// 1 is the minimum max to get a desired answer from one test case (good)
+const LINES_TOLERANCE = 1;
 
 class Graph {
   // structure & constructor
@@ -52,78 +60,64 @@ class Graph {
     return copy;
   }
 
-  // bfs for undirected unweighted joined graph
-  // bfs created an infinite loop. need to recheck algo - 15/4/23
-  bfs(src: string, dest: string) {
-    // setup
-    var visited : {[key:string]: number} = {};
-    for(let node of Object.keys(this.adjList)) {
-      visited[node] = 0;
-    }
-    //start from dest
-    var traversals = [] as string[][];
-    this.bfs_findPaths(src, dest, traversals)
-    return traversals;
-  }
-
-  bfs_findPaths(src:string, dest:string, ans:string[][]) {
-    let q = [];
-    let path = [];
-    let passedLine = []; 
-    path.push(dest);
-    q.push(path.slice());
-    var tries=0
-    // console.log('lets find ', src, dest);
-    while(q.length && tries < 200) {
-      // console.log([...q]);
-      path = q[0] !== undefined ? q[0] : [];
-      q.shift();
-      let last = path[path.length-1];
-      if(last === src) {
-        // console.log('reach???')
-        ans.push(path.slice());
-      } else {
-        for(let i=0; i<this.adjList[last].nodes.length; i++) {
-          if(!path.includes(this.adjList[last].nodes[i])) {
-            let newPath = path.slice();
-            newPath.push(this.adjList[last].nodes[i]);
-            q.push(newPath);
-          }
-        }
-      }
-      tries++;
-    }
-
-  }
-
   /* Log: 15/4/23
   // step 1: simple dfs
   // dfs is okay. so far returns all possible paths. 
   // but the result size is too big and non-sensical (looping lrt lines)
   // step 2: check line change
   // 1. avoid using same line until a number of stations has passed
-  // - result for to and fro are different (for 5) (eg bishan to outram - 7999 paths / 10295 paths)
-  // 2. avoid using two same lines (if you took red and circle, can only retake red OR circle)
+  // - result for to and fro are different (for 5) 
+  // (eg bishan to outram - 7999 paths / 10295 paths)
+  // 2. avoid using two same lines (if you took red and circle, can 
+  // only retake red OR circle)
+  // step 3: find shortest path first then allow only a number of 
+  // threshold from the shortest path
+  // step 4: find least line change and add tolerance
   */
   dfs(src: string, dest: string) {
     // setup
+    // djikstra to find shortest path
+    var shortestDist = this.djikstra(src, dest);
     var visited : {[key:string]: number} = {};
     for(let node of Object.keys(this.adjList)) {
       visited[node] = 0;
     }
 
-    var traversal:string[][] = [];
+    var traversalnlines: string[][][] = [];
     let path = [];
     path.push(src);
-    this.dfs_util(src, dest, visited, path, [], traversal);
+    this.dfs_util(src, dest, shortestDist, visited, path, [], traversalnlines);
     
+    // step 4: find least line change and add tolerance
+    let minLineChanges = Number.POSITIVE_INFINITY;
+    traversalnlines.forEach((journey) => {
+      let changes = this.howManyLineChanges(journey[1]);
+      minLineChanges = minLineChanges > changes ? changes : minLineChanges;
+    });
+
+    var traversal: string[][] = [];
+    traversal = traversalnlines.filter((journey) => {
+      return this.howManyLineChanges(journey[1]) <= minLineChanges + LINES_TOLERANCE;
+    }).sort((a, b) => {
+      if(a[0].length == b[0].length) {
+        return this.howManyLineChanges(a[1]) - this.howManyLineChanges(b[1]);
+      } else {
+        return a[0].length - b[0].length;
+      }
+    }).map((journey) => {
+      return journey[0] as string[];
+    });
+
     return traversal;
   }
 
-  dfs_util(src: string, dest: string, visited: {[key:string]: number}, path: string[], lines: string[], ans: string[][]) {
+  dfs_util(src: string, dest: string, shortestDist: number, visited: {[key:string]: number}, path: string[], lines: string[], ans: string[][][]) {
+    if(path.length > shortestDist + STATIONS_TOLERANCE) {
+      return;
+    }
     if(src == dest) {
-      if(!ans.includes(path)) { // safeguard but theorectically doesn't affect as the visited prevents the same thing.
-        ans.push(path.slice());
+      if(!ans.includes([path, lines])) { // safeguard but theorectically doesn't affect as the visited prevents the same thing.
+        ans.push([path.slice(), lines]);
       }
       // console.log(lines);
       return;
@@ -140,7 +134,7 @@ class Graph {
         } else {
           if(commutedLine.length==1) {
             if(linesCopy.includes(commutedLine[0])) {
-              if(this.hasSameLine(linesCopy)) {
+              if(this.hasSameLine(linesCopy)) { // allows one time same line
                 break;
               } else if(linesCopy[linesCopy.length-1] != commutedLine[0]) {
                 if(linesCopy.length - linesCopy.lastIndexOf(commutedLine[0]) + 1 > LAPSED_STATIONS) {
@@ -156,7 +150,11 @@ class Graph {
             }
           } else {
             // two lines only
-            if(linesCopy.includes(commutedLine[0]) && linesCopy[linesCopy.length-1] == commutedLine[0]) {
+            if(linesCopy.includes(commutedLine[0]) && this.hasSameLine(linesCopy)) {
+              break;
+            } else if(linesCopy.includes(commutedLine[1]) && this.hasSameLine(linesCopy)) {
+              break;
+            } else if(linesCopy.includes(commutedLine[0]) && linesCopy[linesCopy.length-1] == commutedLine[0]) {
               linesCopy.push(commutedLine[0]);
             } else if(linesCopy.includes(commutedLine[1]) && linesCopy[linesCopy.length-1] == commutedLine[1]) {
               linesCopy.push(commutedLine[1]);
@@ -182,7 +180,7 @@ class Graph {
           }
         }
         path.push(neighbor);
-        this.dfs_util(neighbor, dest, visited, path, linesCopy, ans);
+        this.dfs_util(neighbor, dest, shortestDist, visited, path, linesCopy, ans);
         path.splice(path.indexOf(neighbor), 1);
       }
     }
@@ -218,6 +216,42 @@ class Graph {
       }
     }
     return false;
+  }
+
+  // check the shortest distance available using bfs
+  djikstra(src: string, dest: string) {
+    // djikstra uses bfs
+    var distances : {[key:string]: number} = {};
+    for(let node of Object.keys(this.adjList)) {
+      distances[node] = node === src ? 0 : Number.POSITIVE_INFINITY;
+    }
+
+    var unsettled = [src];
+    while(unsettled.length) {
+      let now = unsettled.shift() || '';
+      let neighbors = this.adjList[now]?.nodes;
+      for(let i=0; i<neighbors.length; i++) {
+        let next = neighbors[i];
+        if(distances[next] > distances[now] + 1) {
+          distances[next] = distances[now] + 1;
+          unsettled.push(next);
+        }
+      }
+    }
+    return distances[dest];
+  }
+
+  // cheeck how many times you have to change line
+  howManyLineChanges(journey: string[]) {
+    let change = 0;
+    let curr = journey[0]
+    for(let i=1; i<journey.length; i++) {
+      if(journey[i] != curr) {
+        curr = journey[i];
+        change++;
+      }
+    }
+    return change;
   }
 
 }

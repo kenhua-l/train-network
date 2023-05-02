@@ -875,8 +875,7 @@ beforeAll(() => {
 
 // TESTS
 var tests = [
-  { 
-    src: "cc15", dest: "ew16", id: "Bishan to Outram Park", type: "Interchange change line",
+  { src: "cc15", dest: "ew16", id: "Bishan to Outram Park", type: "Interchange change line",
     musthaveroute:['cc15', 'ns18', 'ns19', 'ns20', 'ns21', 'ns22', 'te15', 'te16', 'ew16']
   },
   { src: "cc15", dest: "ns16", id: "Bishan to Ang Mo Kio", type: "Interchange to normal one stop",
@@ -974,6 +973,12 @@ var tests = [
   },
   { src: "ce1", dest: "cc20", id: "Bayfront to Farrer Road", type: "Same line but change line better",
     musthaveroute:['ce1', 'cc4', 'ew12', 'dt13', 'ne7', 'ns21', 'dt10', 'cc19', 'cc20']
+  },
+  { src: "ew29", dest: "pe7", id: "Joo Koon to Damai", type: "Change multiple lines",
+    musthaveroute:['ew29', 'ew28', 'ew27', 'ew26', 'ew25', 'ew24', 'ew23', 'ew22', 'cc22', 'cc21', 'cc20', 'cc19', 'cc17', 'cc16', 'cc15', 'cc14', 'cc13', 'ne13', 'ne14', 'ne15', 'ne16', 'ne17', 'pe7']
+  },
+  { src: "cg2", dest: "te1", id: "Changi Airport to Woodlands North", type: "Change multiple lines",
+    musthaveroute:['cg2', 'cg1', 'ew4', 'ew5', 'ew6', 'ew7', 'cc9', 'cc10', 'cc11', 'cc12', 'cc13', 'cc14', 'cc15', 'ns16', 'ns15', 'ns14', 'ns13', 'ns12', 'ns11', 'ns10', 'ns9', 'te1']
   }
 ]
 
@@ -1101,6 +1106,145 @@ function testAll() {
     });
     test('Empty', () => {
       expect(trainNetwork.hasSameLine([])).toBeFalsy();
+    });
+  });
+
+  describe('How Many Line Changes', () => {
+    test('Same line once', () => {
+      expect(trainNetwork.howManyLineChanges(['ccl', 'ccl', 'ccl', 'ewl', 'ewl', 'ccl', 'ccl'])).toBe(2);
+    });
+    test('Same line in between', () => {
+      expect(trainNetwork.howManyLineChanges(['nsl', 'ccl', 'ccl', 'ewl', 'ewl', 'ccl', 'dtl'])).toBe(4);
+    });
+    test('No same line', () => {
+      expect(trainNetwork.howManyLineChanges(['nsl', 'ccl', 'ccl', 'ewl', 'ewl', 'dtl'])).toBe(3);
+    });
+    test('No same line at all', () => {
+      expect(trainNetwork.howManyLineChanges(['nsl', 'ccl', 'tel', 'ewl', 'nel', 'dtl'])).toBe(5);
+    });
+    test('Same line twice', () => {
+      expect(trainNetwork.howManyLineChanges(['nsl', 'ccl', 'nsl', 'ewl', 'ccl', 'dtl'])).toBe(5);
+    });
+    test('Only one line', () => {
+      expect(trainNetwork.howManyLineChanges(['ccl'])).toBe(0);
+    });
+    test('Only one line multiple', () => {
+      expect(trainNetwork.howManyLineChanges(['ccl', 'ccl', 'ccl', 'ccl'])).toBe(0);
+    });
+    test('Empty', () => {
+      expect(trainNetwork.howManyLineChanges([])).toBe(0);
+    });
+  });
+
+  describe('Find Shortest Distance, djikstra', () => {
+    test('Bishan to Outram Park', () => {
+      expect(trainNetwork.djikstra('cc15', 'ew16')).toBe(8);
+    });
+    test('Bishan to Ang Mo Kio', () => {
+      expect(trainNetwork.djikstra('cc15', 'ns16')).toBe(1);
+    });
+    test('Bishan to Punggol Point', () => {
+      expect(trainNetwork.djikstra('cc15', 'pw3')).toBe(9);
+    });
+    test('Bishan to Changi Airport', () => {
+      expect(trainNetwork.djikstra('cc15', 'cg2')).toBe(12);
+    });
+    test('Bishan to Raffle Place', () => {
+      // via newtown dtl little india to dhoby again nel
+      expect(trainNetwork.djikstra('cc15', 'ew14')).toBe(8);
+    });
+    test('Bishan to South View', () => {
+      expect(trainNetwork.djikstra('cc15', 'bp2')).toBe(13);
+    });
+    test('Ang Mo Kio to Lavender', () => {
+      // nsl, dtl, ewl
+      expect(trainNetwork.djikstra('ns16', 'ew11')).toBe(9);
+    });
+    test('Ang Mo Kio to Kaki Bukit', () => {
+      expect(trainNetwork.djikstra('ns16', 'dt28')).toBe(8);
+    });
+    test('Bukit Batok to Bukit Gombak', () => {
+      expect(trainNetwork.djikstra('ns2', 'ns3')).toBe(1);
+    });
+    test('Pioneer to Boon Lay', () => {
+      expect(trainNetwork.djikstra('ew28', 'ew27')).toBe(1);
+    });
+    test('Woodlands to Woodlands North', () => {
+      expect(trainNetwork.djikstra('ns9', 'te1')).toBe(1);
+    });
+    test('Raffles Place to City Hall', () => {
+      expect(trainNetwork.djikstra('ew14', 'ew13')).toBe(1);
+    });
+    test('Fajar to Bangkit', () => {
+      expect(trainNetwork.djikstra('bp10', 'bp9')).toBe(1);
+    });
+    test('Samudera to Segar', () => {
+      expect(trainNetwork.djikstra('pw4', 'bp11')).toBe(23);
+    });
+    test('Samudera to Riviera', () => {
+      expect(trainNetwork.djikstra('pw4', 'pe4')).toBe(7);
+    });
+    test('Samudera to Bakau', () => {
+      expect(trainNetwork.djikstra('pw4', 'se3')).toBe(7);
+    });
+    test('Dhoby Ghaut to Outram Park', () => {
+      expect(trainNetwork.djikstra('cc1', 'ew16')).toBe(3);
+    });
+    test('Maxwell to Shenton Way', () => {
+      expect(trainNetwork.djikstra('te18', 'te19')).toBe(1);
+    });
+    test('Kovan to Woodleigh', () => {
+      expect(trainNetwork.djikstra('ne13', 'ne11')).toBe(2);
+    });
+    test('Harbourfront to Dhoby Ghaut', () => {
+      expect(trainNetwork.djikstra('cc29', 'cc1')).toBe(4);
+    });
+    test('Tanah Merah to Expo', () => {
+      expect(trainNetwork.djikstra('ew4', 'cg1')).toBe(1);
+    });
+    test('Bedok to Expo', () => {
+      expect(trainNetwork.djikstra('ew5', 'cg1')).toBe(2);
+    });
+    test('Sembawang to Yio Chu Kang', () => {
+      expect(trainNetwork.djikstra('ns11', 'ns15')).toBe(4);
+    });
+    test('Bayfront to Promenade', () => {
+      expect(trainNetwork.djikstra('ce1', 'cc4')).toBe(1);
+    });
+    test('Harbourfront to Harbourfront', () => {
+      expect(trainNetwork.djikstra('cc29', 'cc29')).toBe(0);
+    });
+    test('Tuas Link to Tuas Link', () => {
+      expect(trainNetwork.djikstra('ew33', 'ew33')).toBe(0);
+    });
+    test('Clementi to Clementi', () => {
+      expect(trainNetwork.djikstra('ew23', 'ew23')).toBe(0);
+    });
+    test('Choa Chu Kang to Bukit Panjang', () => {
+      expect(trainNetwork.djikstra('ns4', 'dt1')).toBe(5);
+    });
+    test('Yew Tee to Cashew', () => {
+      expect(trainNetwork.djikstra('ns5', 'dt2')).toBe(7);
+    });
+    test('Bras Basah to Marymount', () => {
+      // ccl to dhoby, ewl -> dtl -> tel then ccl
+      expect(trainNetwork.djikstra('cc2', 'cc16')).toBe(6);
+    });
+    test('Tan Kah Kee to Ubi', () => {
+      expect(trainNetwork.djikstra('dt8', 'dt27')).toBe(10);
+    });
+    test('Esplanade to Farrer Road', () => {
+      // ccl to dhoby, ewl -> dtl then ccl
+      expect(trainNetwork.djikstra('cc3', 'cc20')).toBe(7);
+    });
+    test('Bayfront to Farrer Road', () => {
+      expect(trainNetwork.djikstra('ce1', 'cc20')).toBe(8);
+    });
+    test('Joo Koon to Damai', () => {
+      expect(trainNetwork.djikstra('ew29', 'pe7')).toBe(22);
+    });
+    test('Changi Airport to Woodlands North', () => {
+      expect(trainNetwork.djikstra('cg2', 'te1')).toBe(21);
     });
   });
 

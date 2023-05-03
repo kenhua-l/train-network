@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type Result = {
   data: string[][][];
@@ -13,7 +13,17 @@ type AccordionProps = {
   path: string[];
   instructions: string[];
   open: boolean;
-  color: string;
+  color: string[];
+}
+
+const lineColors:{[key:string]: string} = {
+  ccl: '#fa9e0d',
+  ewl: '#009645',
+  nsl: '#d42e12',
+  nel: '#9900aa',
+  dtl: '#005ec4',
+  tel: '#784008',
+  lrt: '#999999'
 }
 
 function Accordion(props: AccordionProps) {
@@ -43,11 +53,19 @@ function Accordion(props: AccordionProps) {
   return (
     <div className="panel">
       <div className="panel-head" onClick={() => togglePanel()}>
+        {props.color.map((line, i) => (
+          <React.Fragment key={i}>
+            <div key={i} className="line-pill" style={{background:lineColors[line]}}>{line.toUpperCase()}</div>
+            {i !== props.color.length - 1 ? React.createElement('span', { dangerouslySetInnerHTML: { __html: '&bull;&bull;&bull;' }}) : ''}
+          </React.Fragment>
+        ))}
+        <div>
+          {props.path.join(' -> ')}
+        </div>
         <div className={`panel-close ${open ? 'open' : ''}`}>
           <span></span>
           <span></span>
         </div>
-        {props.path.join(' -> ')}
       </div>
       <div ref={content} className={`panel-content ${open ? 'open' : ''}`} style={{maxHeight:height}}>
         <div className="py-3">
@@ -63,15 +81,20 @@ function Accordion(props: AccordionProps) {
 }
 
 export default function PrintResult(props: Result) {
-  const lineColors:{[key:string]: string} = {
-    ccl: '#fa9e0d',
-    ewl: '#009645',
-    nsl: '#d42e12',
-    nel: '#9900aa',
-    dtl: '#005ec4',
-    tel: '#784008',
-    lrt: '#999999'
+
+  function getColors(journey: string[]) {
+    let condensed = [];
+    let currentLine = journey[0];
+    condensed.push(currentLine);
+    for(let i=1; i<journey.length; i++) {
+      if(journey[i] !== currentLine) {
+        currentLine = journey[i];
+        condensed.push(currentLine);
+      }
+    }
+    return condensed;
   }
+
   function writeInstruction(lines: string[], stations: string[]) {
     let ins: string[] = [];
     
@@ -118,7 +141,7 @@ export default function PrintResult(props: Result) {
                   open={i === 0}
                   path={pathString}
                   instructions={writeInstruction(path[1], path[0])}
-                  color={lineColors[path[1][0]]}
+                  color={getColors(path[1])}
                 />
               </li>
             )

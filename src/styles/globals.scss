@@ -141,3 +141,119 @@ svg {
   max-height: 50vh;
   overflow: scroll;
 }
+
+.close-icon {
+  width: 1.5rem;
+  height: 2rem;
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
+  position: relative;
+  span {
+    width: 100%;
+    height: 2px;
+    background: black;
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, 50%);
+    &:first-child {
+      transform: translate(-50%, 50%) rotate(45deg);
+    }
+    &:last-child {
+      transform: translate(-50%, 50%) rotate(135deg);
+    }
+  }
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 1px 1px 8px #999;
+  padding: 1.5rem 1rem;
+  transition: 0.5s all;
+  transform: translateX(-100%);
+  display: flex;
+  flex-flow: column;
+  @media (min-width: 768px) {
+    width: 75%;
+  }
+  @media (min-width: 992px) {
+    width: 60%;
+  }
+  &.open {
+    transform: translateX(0);
+  }
+
+  .drawer-content {
+    height: calc(100% - 6rem);
+    overflow: scroll;
+  }
+}
+
+.panel-group {
+  list-style-type: none;
+  padding-left: 0;
+  li {
+    padding-bottom: 1rem;
+  }
+  .panel {
+    .panel-head {
+      padding: 0.5rem 1rem;
+      padding-right: 2rem;
+      line-height: 1.25;
+      position: relative;
+      background: #cdcdcd;
+      cursor: pointer;
+      .panel-close {
+        width: 1rem;
+        height: 1rem;
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        span {
+          width: 75%;
+          height: 2px;
+          background: black;
+          display: block;
+          top: 50%;
+          position: absolute;
+          transition: 0.3s all;
+          &:first-child {
+            transform: rotate(0deg);
+          }
+          &:last-child {
+            transform: rotate(90deg);
+          }
+        }
+        &.open {
+          span {
+            &:first-child {
+              transform: rotate(135deg);
+            }
+            &:last-child {
+              transform: rotate(225deg);
+            }
+          }
+        }
+      }
+    }
+    .panel-content {
+      background: #efefef;
+      padding: 0;
+      overflow: hidden;
+      transition: 0.3s all;
+      ol {
+        li {
+          padding-bottom: 0.25rem;
+        }
+      }
+    }
+  }
+}

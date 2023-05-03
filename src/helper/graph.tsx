@@ -95,7 +95,7 @@ class Graph {
       minLineChanges = minLineChanges > changes ? changes : minLineChanges;
     });
 
-    var traversal: string[][] = [];
+    var traversal: string[][][] = [];
     traversal = traversalnlines.filter((journey) => {
       return this.howManyLineChanges(journey[1]) <= minLineChanges + LINES_TOLERANCE;
     }).sort((a, b) => {
@@ -105,7 +105,7 @@ class Graph {
         return a[0].length - b[0].length;
       }
     }).map((journey) => {
-      return journey[0] as string[];
+      return [journey[0], journey[1]];
     });
 
     return traversal;
@@ -244,7 +244,7 @@ class Graph {
   // cheeck how many times you have to change line
   howManyLineChanges(journey: string[]) {
     let change = 0;
-    let curr = journey[0]
+    let curr = journey[0];
     for(let i=1; i<journey.length; i++) {
       if(journey[i] != curr) {
         curr = journey[i];

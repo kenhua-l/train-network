@@ -3,6 +3,7 @@ import TrainMap from '../components/trainMap';
 import { fetchData } from "@/api/utilities";
 import { useEffect, useState } from 'react';
 import Graph from '@/helper/graph';
+import PrintResult from '@/components/printResult';
 
 type StationData = {
   stationId: string;
@@ -17,6 +18,8 @@ export default function MapContainer() {
   const stationNamesDataFile = '../data/trainmap/train-codename.json';
   const stationGraphDataFile = '../data/network/train-network.json';
   const [trainGraph, setTrainGraph] = useState(new Graph());
+  const [paths, setPaths] = useState<string[][][]>([]);
+  const [openResult, setOpenResult] = useState(false);
 
   function handleClick(id: string) {
     if(source[1] == '') {
@@ -25,9 +28,13 @@ export default function MapContainer() {
       setDestination([id,stationNames[id]]);
     }
   }
+  function handleCloseResult() {
+    setOpenResult(false); 
+  }
   function reset() {
     setSource(['','']);
     setDestination(['','']);
+    setPaths([]);
   }
   async function fetchStationNames() {
     let names = await fetchData(stationNamesDataFile);
@@ -46,9 +53,9 @@ export default function MapContainer() {
   }
 
   function traverse() {
-    // let result = trainGraph.bfs(source[0], destination[0]);
     let result = trainGraph.dfs(source[0], destination[0]);
-    console.log('res', result);
+    setPaths(result);
+    setOpenResult(true);
     return result;
   }
 
@@ -72,6 +79,14 @@ export default function MapContainer() {
           handleClick={handleClick}
         />
       </div>
+      <PrintResult 
+        data={paths}
+        list={stationNames}
+        source={source[1]}
+        destination={destination[1]}
+        onClose={handleCloseResult}
+        open={openResult}
+      />
     </div>
   )
 }

@@ -7,6 +7,7 @@ declare interface StationSelectProps {
   cost: string;
   reset: Function;
   traverse: Function;
+  error: boolean;
 }
 
 export default function StationSelect(props: StationSelectProps) {
@@ -49,10 +50,11 @@ export default function StationSelect(props: StationSelectProps) {
         <span> to </span>
         <input type="text" value={props.destination} readOnly></input>
       </div>
-      {props.routes && props.routes != '' && <p>{props.routes} routes found and total cost is {props.cost}</p>}
+      {props.error && <p className="text-danger">Please select a source and a destination to continue.</p>}
+      {/* {props.routes && props.routes != '' && <p>{props.routes} routes found and total cost is {props.cost}</p>} */}
       <div>
         <button className="btn btn-primary me-3" type="button" onClick={() => {props.traverse()}}>See all routes</button>
-        <button className="btn btn-primary" type="reset" onClick={() => {props.reset()}}>reset</button>
+        <button className="btn btn-primary" type="reset" onClick={() => {props.reset()}}>Reset</button>
       </div>
     </>
   )

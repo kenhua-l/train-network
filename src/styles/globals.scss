@@ -1,81 +1,22 @@
 :root {
-  --max-width: 1100px;
-  --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
-    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
-
   --font-san-serif: 'Roboto', 'San Serif', 'Montserrat';
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-
-  --primary-glow: conic-gradient(
-    from 180deg at 50% 50%,
-    #16abff33 0deg,
-    #0885ff33 55deg,
-    #54d6ff33 120deg,
-    #0071ff33 160deg,
-    transparent 360deg
-  );
-  --secondary-glow: radial-gradient(
-    rgba(255, 255, 255, 1),
-    rgba(255, 255, 255, 0)
-  );
-
-  --tile-start-rgb: 239, 245, 249;
-  --tile-end-rgb: 228, 232, 233;
-  --tile-border: conic-gradient(
-    #00000080,
-    #00000040,
-    #00000030,
-    #00000020,
-    #00000010,
-    #00000010,
-    #00000080
-  );
-
-  --callout-rgb: 238, 240, 241;
-  --callout-border-rgb: 172, 175, 176;
-  --card-rgb: 180, 185, 188;
-  --card-border-rgb: 131, 134, 135;
 }
 
-// @media (prefers-color-scheme: dark) {
-//   :root {
-//     --foreground-rgb: 255, 255, 255;
-//     --background-start-rgb: 0, 0, 0;
-//     --background-end-rgb: 0, 0, 0;
+$color-ccl: #fa9e0d;
+$color-ewl: #009645;
+$color-nsl: #d42e12;
+$color-nel: #9900aa;
+$color-dtl: #005ec4;
+$color-tel: #784008;
+$color-lrt: #999999;
+$drawer-bg: rgb(255, 255, 255, 0.95);
+$color-panel-head: #cdcdcd;
+$color-panel-content: #efefef;
 
-//     --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
-//     --secondary-glow: linear-gradient(
-//       to bottom right,
-//       rgba(1, 65, 255, 0),
-//       rgba(1, 65, 255, 0),
-//       rgba(1, 65, 255, 0.3)
-//     );
-
-//     --tile-start-rgb: 2, 13, 46;
-//     --tile-end-rgb: 2, 5, 19;
-//     --tile-border: conic-gradient(
-//       #ffffff80,
-//       #ffffff40,
-//       #ffffff30,
-//       #ffffff20,
-//       #ffffff10,
-//       #ffffff10,
-//       #ffffff80
-//     );
-
-//     --callout-rgb: 20, 20, 20;
-//     --callout-border-rgb: 108, 108, 108;
-//     --card-rgb: 100, 100, 100;
-//     --card-border-rgb: 200, 200, 200;
-//   }
-// }
-
-html,
-body {
+html, body {
   max-width: 100vw;
   overflow-x: hidden;
 }
@@ -92,13 +33,6 @@ body {
   font-family: var(--font-san-serif);
   height: 100vh;
 }
-
-
-// @media (prefers-color-scheme: dark) {
-//   // html {
-//   //   // color-scheme: dark;
-//   // }
-// }
 
 .from-to-div {
   display: flex;
@@ -173,7 +107,7 @@ svg {
   left: 0;
   width: 100%;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.95);
+  background: $drawer-bg;
   box-shadow: 1px 1px 8px #999;
   padding: 1.5rem 1rem;
   transition: 0.5s all;
@@ -191,7 +125,7 @@ svg {
   }
   .knob {
     cursor: pointer;
-    background: rgba(255, 255, 255, 0.95);
+    background: $drawer-bg;
     box-shadow: -8px 0 8px #fff, 1px 1px 8px #999;
     border-radius: 0 8px 8px 0;
     position: absolute;
@@ -225,49 +159,49 @@ svg {
   &.ccl {
     li {
       &::before {
-        background: #fa9e0d;
+        background: $color-ccl;
       }
     }
   }
   &.ewl {
     li {
       &::before {
-        background: #009645;
+        background: $color-ewl;
       }
     }
   }
   &.nsl {
     li {
       &::before {
-        background: #d42e12;
+        background: $color-nsl;
       }
     }
   }
   &.nel {
     li {
       &::before {
-        background: #9900aa;
+        background: $color-nel;
       }
     }
   }
   &.dtl {
     li {
       &::before {
-        background: #005ec4;
+        background: $color-dtl;
       }
     }
   }
   &.tel {
     li {
       &::before {
-        background: #784008;
+        background: $color-tel;
       }
     }
   }
   &.lrt, &.bplrt, &.sklrt, &.pglrt {
     li {
       &::before {
-        background: #999;
+        background: $color-lrt;
       }
     }
   }
@@ -293,7 +227,7 @@ svg {
     .panel-head {
       padding: 0.5rem 1rem;
       line-height: 1.25;
-      background: #cdcdcd;
+      background: $color-panel-head;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -330,7 +264,7 @@ svg {
       }
     }
     .panel-content {
-      background: #efefef;
+      background: $color-panel-content;
       padding: 0;
       overflow: hidden;
       transition: 0.3s all;

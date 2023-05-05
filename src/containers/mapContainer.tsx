@@ -14,6 +14,7 @@ type StationData = {
 export default function MapContainer() {
   const [source, setSource] = useState<string[]>(['cc15','Bishan']);
   const [destination, setDestination] = useState<string[]>(['ew16','Outram Park']);
+  const [error, setError] = useState(false);
   const [stationNames, setStationNames] = useState<{[key: string]: string}>({});
   const stationNamesDataFile = '../data/trainmap/train-codename.json';
   const stationGraphDataFile = '../data/network/train-network.json';
@@ -58,9 +59,14 @@ export default function MapContainer() {
   }
 
   function traverse() {
-    let result = trainGraph.dfs(source[0], destination[0]);
-    setPaths(result);
-    setOpenResult(true);
+    if(source[0] === '' || destination[0] === '') {
+      setError(true);
+    } else {
+      setError(false);
+      let result = trainGraph.dfs(source[0], destination[0]);
+      setPaths(result);
+      setOpenResult(true);
+    }
   }
 
   useEffect(() => {
@@ -92,6 +98,7 @@ export default function MapContainer() {
       <StationSelect
         source={source[1]}
         destination={destination[1]}
+        error={error}
         reset={reset}
         cost=""
         routes=""
@@ -114,7 +121,6 @@ export default function MapContainer() {
           hasResult={paths.length > 0}
         />
       </div>
-      
     </div>
   )
 }

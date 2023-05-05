@@ -19,11 +19,6 @@ type TrainStation = {
   handleClick: Function;
 }
 
-declare interface TrainMapProps {
-  handleClick: Function;
-  trainStations: TrainStationProps[];
-}
-
 function TrainStation(props: TrainStation) {
   const [radius, setRadius] = useState<number>(4);
   const [fontSize, setFontSize] = useState<number>(0);

@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import styles from '@/styles/Home.module.scss'
 import MapContainer from '../containers/mapContainer';
 
 export default function Home() {
@@ -13,8 +12,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="container">
-        <p><Link href="/graph-builder">Graph Builder</Link></p>
-        <main className={styles.main}>
+        <p><Link href="/graph-builder">Graph Builder (for graph development manual entry)</Link></p>
+        <main>
           <h1>Train Map</h1>
           <MapContainer />
         </main>

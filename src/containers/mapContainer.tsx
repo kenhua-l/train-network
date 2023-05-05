@@ -1,7 +1,7 @@
 import StationSelect from '../components/stationSelect';
 import TrainMap from '../components/trainMap';
 import { fetchData } from "@/api/utilities";
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Graph from '@/helper/graph';
 import PrintResult from '@/components/printResult';
 
@@ -20,6 +20,7 @@ export default function MapContainer() {
   const [trainGraph, setTrainGraph] = useState(new Graph());
   const [paths, setPaths] = useState<string[][][]>([]);
   const [openResult, setOpenResult] = useState(false);
+  const resultComponent = useRef<any>(null);
 
   function handleClick(id: string) {
     if(source[1] == '') {
@@ -31,6 +32,10 @@ export default function MapContainer() {
   function handleCloseResult() {
     setOpenResult(false); 
   }
+  function handleToggle() {
+    setOpenResult(!openResult)
+  }
+
   function reset() {
     setSource(['','']);
     setDestination(['','']);
@@ -56,13 +61,31 @@ export default function MapContainer() {
     let result = trainGraph.dfs(source[0], destination[0]);
     setPaths(result);
     setOpenResult(true);
-    return result;
   }
 
   useEffect(() => {
     fetchStationNames();
     fetchStationGraph();
   }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event: { target: any; }) {
+      if (resultComponent.current && !resultComponent.current.contains(event.target)) {
+        setOpenResult(false);
+      }
+    }
+    // only add the event listener when the dropdown is opened
+    if(openResult) {
+      setTimeout(() => {
+        window.addEventListener("click", handleClickOutside);
+      }, 500)
+      // clean up
+      return () => window.removeEventListener("click", handleClickOutside);
+    } else {
+      return;
+    };
+  
+  }, [openResult]);
 
   return (
     <div>
@@ -79,14 +102,19 @@ export default function MapContainer() {
           handleClick={handleClick}
         />
       </div>
-      <PrintResult 
-        data={paths}
-        list={stationNames}
-        source={source[1]}
-        destination={destination[1]}
-        onClose={handleCloseResult}
-        open={openResult}
-      />
+      <div ref={resultComponent}>
+        <PrintResult 
+          data={paths}
+          list={stationNames}
+          source={source[1]}
+          destination={destination[1]}
+          onClose={handleCloseResult}
+          toggleOpen={handleToggle}
+          open={openResult}
+          hasResult={paths.length > 0}
+        />
+      </div>
+      
     </div>
   )
 }

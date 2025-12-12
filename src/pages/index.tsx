@@ -13,6 +13,7 @@ export default function Home() {
       </Head>
       <div className="container">
         <p><Link href="/graph-builder">Graph Builder (for graph development manual entry)</Link></p>
+        <p><Link href="/map">Map</Link></p>
         <main>
           <h1>Train Map</h1>
           <MapContainer />
